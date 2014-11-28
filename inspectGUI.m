@@ -3,14 +3,19 @@ function inspectGUI
 h=figure('units','centimeters','position',[1,1,38.5,20],...
     'toolbar','none','menu','none','name','Signal inspection');
 
-ax4=axes('Units','centimeters','Position',[2 13.5 17 4],...
+ax4=axes('Units','centimeters','Position',[2 15 17 3],...
     'Parent',h);         
-ax5=axes('Units','centimeters','Position',[20.5 13.5 17 4],...
+ax5=axes('Units','centimeters','Position',[20.5 15 17 3],...
     'Parent',h); 
 
-ax6=axes('Units','centimeters','Position',[2 4 17 4],...
+ax6=axes('Units','centimeters','Position',[2 7.5 17 3],...
     'Parent',h);
-ax7=axes('Units','centimeters','Position',[20.5 4 17 4],...
+ax7=axes('Units','centimeters','Position',[2 2.5 17 3],...
+    'Parent',h);
+
+ax8=axes('Units','centimeters','Position',[20.5 7.5 17 3],...
+    'Parent',h);
+ax9=axes('Units','centimeters','Position',[20.5 2.5 17 3],...
     'Parent',h);
 
 uicontrol('style','Text','units','centimeters',...
@@ -52,8 +57,10 @@ signal();
         N = size(t,1);
         Y = fftshift(fft(y));
         dF = fs/N;
-        f = -fs/2:dF:fs/2-dF;        
-
+        f = -fs/2:dF:fs/2-dF; 
+        
+        assignin('base','f',f);
+        
         plot(ax5,f,abs(Y)/N); 
         set(ax5,'xlim',[0 2500]);
         grid(ax5, 'on'); 
@@ -64,11 +71,11 @@ signal();
             'horizontalalignment','left','fontweight','bold');
         
         rnames={'Frequency','|Current|'};
-        t = uitable('units','centimeters','position',[0.25,9.5,38,2],...
+        t = uitable('units','centimeters','position',[0.25,11.5,38,2],...
             'RowName',rnames);
         
-        [pks,locs]=findpeaks((abs(Y)/N),'MINPEAKDISTANCE',45,...
-            'MINPEAKHEIGHT',0.3);        
+        [pks,locs]=findpeaks((abs(Y)/N),'minpeakdistance',45,...
+            'minpeakheight',0.3);        
         
         ls=length(locs);
         for m=1:ls 
@@ -79,8 +86,12 @@ signal();
             
         z(:,all(~any(z),1))=[];
         [~,I]=sort(z(1,:));
+        z(1,1)
+        z(1,2)
         d=z(:,I);
         set(t,'Data',d); 
+        
+        assignin('base','d',d);
         
         xlabel(ax4, 'Time (seconds)');
         ylabel(ax4, 'Amplitude (pixels per sample unit)');
@@ -122,13 +133,14 @@ filt.h = uicontrol('style','pushbutton','units','centimeters',...
     function fh_call(varargin)
         y=evalin('base','Total');
         t=evalin('base','time');
-        
+%         d=evalin('base','d');
+%         f=evalin('base','f');
         Fs = 41100;  % Sampling Frequency
 
-        Fstop1 = 45;          % First Stopband Frequency
-        Fpass1 = 48;          % First Passband Frequency
-        Fpass2 = 52;          % Second Passband Frequency
-        Fstop2 = 55;          % Second Stopband Frequency
+        Fstop1 = 48;          % First Stopband Frequency
+        Fpass1 = 49;          % First Passband Frequency
+        Fpass2 = 51;          % Second Passband Frequency
+        Fstop2 = 52;          % Second Stopband Frequency
         Astop1 = 3;           % First Stopband Attenuation (dB)
         Apass  = 1;           % Passband Ripple (dB)
         Astop2 = 3;           % Second Stopband Attenuation (dB)
@@ -138,11 +150,8 @@ filt.h = uicontrol('style','pushbutton','units','centimeters',...
         h  = fdesign.bandpass(Fstop1, Fpass1, Fpass2, Fstop2, Astop1, Apass, ...
                               Astop2, Fs);
         Hd = design(h, 'butter', 'MatchExactly', match);
-
-
-
-
         DataFilt=filter(Hd,y);
+        
         plot(ax6,t,DataFilt);
         grid(ax6,'on');
         
@@ -156,6 +165,38 @@ filt.h = uicontrol('style','pushbutton','units','centimeters',...
         set(ax7,'xlim',[0 2500]);
         grid(ax7, 'on');
         
+        w=(0:10:2000);
+        [b,a]=tf(Hd);
+        Y=freqs(b,a,w); 
+        y1=abs(Y);
+        y2=angle(Y);
+        semilogx(ax8,w,20*log10(y1));
+        grid (ax8,'on');
+  
+        semilogx(ax9,w,y2*(180/pi));
+        grid(ax9,'on');
+
+        
+%         omega=(0:3000)*pi/3000;
+%         hp=freqz(DataFilt,1,omega);
+%         
+%         plot(ax8,omega/pi,abs(hp));
+%         plot(ax9,omega/pi,angle(hp));
+        
+%         [hh,w]=freqz(DataFilt);
+%         plot(ax8,w,20*log10(abs(hh)));
+%         grid(ax8,'on');
+% 
+%         [phi,w]=phasez(DataFilt);
+%         plot(ax9,w,20*log10(abs(phi)));
+%         grid(ax9,'on');
+        
+%         xlabel(ax8, 'Radians/sample');
+%         ylabel(ax8, 'dB');
+%         
+%         xlabel(ax9, 'Radians/sample');
+%         ylabel(ax9, 'dB');
+
     end
 
 h(100) = uicontrol('style','checkbox','units','centimeters',...
