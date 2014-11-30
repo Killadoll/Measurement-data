@@ -133,31 +133,25 @@ filt.h = uicontrol('style','pushbutton','units','centimeters',...
     function fh_call(varargin)
         y=evalin('base','Total');
         t=evalin('base','time');
-%         d=evalin('base','d');
-%         f=evalin('base','f');
-        Fs = 41100;  % Sampling Frequency
-
-        Fstop1 = 48;          % First Stopband Frequency
-        Fpass1 = 49;          % First Passband Frequency
-        Fpass2 = 51;          % Second Passband Frequency
-        Fstop2 = 52;          % Second Stopband Frequency
-        Astop1 = 3;           % First Stopband Attenuation (dB)
-        Apass  = 1;           % Passband Ripple (dB)
-        Astop2 = 3;           % Second Stopband Attenuation (dB)
-        match  = 'stopband';  % Band to match exactly
-
-        % Construct an FDESIGN object and call its BUTTER method.
-        h  = fdesign.bandpass(Fstop1, Fpass1, Fpass2, Fstop2, Astop1, Apass, ...
-                              Astop2, Fs);
-        Hd = design(h, 'butter', 'MatchExactly', match);
-        DataFilt=filter(Hd,y);
         
-        plot(ax6,t,DataFilt);
+        q=500;
+        k=30;
+        fc=50;
+        wc=2*pi*fc;
+       
+%         num=k*[1 0];
+%         den=[q/wc 1 q*wc]; 
+
+        H=tf( k*[1 0], [q/wc 1 q*wc]);
+        
+        lsim(ax6,H,y,t);
+% out=filter(num,den,y);
+% plot(ax6,t,out);
         grid(ax6,'on');
         
         fs=44100;
         N = size(t,1);
-        DF = fftshift(fft(DataFilt));
+        DF = fftshift(fft(out));
         dF = fs/N;
         f = -fs/2:dF:fs/2-dF;        
 
@@ -165,16 +159,59 @@ filt.h = uicontrol('style','pushbutton','units','centimeters',...
         set(ax7,'xlim',[0 2500]);
         grid(ax7, 'on');
         
-        w=(0:10:2000);
-        [b,a]=tf(Hd);
-        Y=freqs(b,a,w); 
-        y1=abs(Y);
-        y2=angle(Y);
-        semilogx(ax8,w,20*log10(y1));
-        grid (ax8,'on');
-  
-        semilogx(ax9,w,y2*(180/pi));
-        grid(ax9,'on');
+
+        bodeplot(H); grid on;
+        handler=gcr;
+        handler.AxesGrid.Xunits = 'Hz'; 
+        handler.AxesGrid.Yunits = {'abs','deg'}; 
+        handler.AxesGrid.Grid = 'on';
+        
+        
+        
+%         y=evalin('base','Total');
+%         t=evalin('base','time');
+% %         d=evalin('base','d');
+% %         f=evalin('base','f');
+%         Fs = 41100;  % Sampling Frequency
+% 
+%         Fstop1 = 48;          % First Stopband Frequency
+%         Fpass1 = 49;          % First Passband Frequency
+%         Fpass2 = 51;          % Second Passband Frequency
+%         Fstop2 = 52;          % Second Stopband Frequency
+%         Astop1 = 3;           % First Stopband Attenuation (dB)
+%         Apass  = 1;           % Passband Ripple (dB)
+%         Astop2 = 3;           % Second Stopband Attenuation (dB)
+%         match  = 'stopband';  % Band to match exactly
+% 
+%         % Construct an FDESIGN object and call its BUTTER method.
+%         h  = fdesign.bandpass(Fstop1, Fpass1, Fpass2, Fstop2, Astop1, Apass, ...
+%                               Astop2, Fs);
+%         Hd = design(h, 'butter', 'MatchExactly', match);
+%         DataFilt=filter(Hd,y);
+%         
+%         plot(ax6,t,DataFilt);
+%         grid(ax6,'on');
+%         
+%         fs=44100;
+%         N = size(t,1);
+%         DF = fftshift(fft(DataFilt));
+%         dF = fs/N;
+%         f = -fs/2:dF:fs/2-dF;        
+% 
+%         plot(ax7,f,abs(DF)/N); 
+%         set(ax7,'xlim',[0 2500]);
+%         grid(ax7, 'on');
+%         
+%         w=(0:10:2000);
+%         [b,a]=tf(Hd);
+%         Y=freqs(b,a,w); 
+%         y1=abs(Y);
+%         y2=angle(Y);
+%         semilogx(ax8,w,20*log10(y1));
+%         grid (ax8,'on');
+%   
+%         semilogx(ax9,w,y2*(180/pi));
+%         grid(ax9,'on');
 
         
 %         omega=(0:3000)*pi/3000;
