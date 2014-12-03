@@ -8,15 +8,11 @@ ax4=axes('Units','centimeters','Position',[2 15 17 3],...
 ax5=axes('Units','centimeters','Position',[20.5 15 17 3],...
     'Parent',h); 
 
-ax6=axes('Units','centimeters','Position',[2 7.5 17 3],...
+ax6=axes('Units','centimeters','Position',[2 6 17 3],...
     'Parent',h);
-ax7=axes('Units','centimeters','Position',[2 2.5 17 3],...
+ax7=axes('Units','centimeters','Position',[20.5 6 17 3],...
     'Parent',h);
 
-ax8=axes('Units','centimeters','Position',[20.5 7.5 17 3],...
-    'Parent',h);
-ax9=axes('Units','centimeters','Position',[20.5 2.5 17 3],...
-    'Parent',h);
 
 uicontrol('style','Text','units','centimeters',...
     'position',[0.5,19,6,0.5],'string','Current sources in signal:',...
@@ -58,11 +54,9 @@ signal();
         Y = fftshift(fft(y));
         dF = fs/N;
         f = -fs/2:dF:fs/2-dF; 
-        
-        assignin('base','f',f);
-        
+    
         plot(ax5,f,abs(Y)/N); 
-        set(ax5,'xlim',[0 2500]);
+        set(ax5,'xlim',[0 2100]);
         grid(ax5, 'on'); 
         
         uicontrol('style','Text','units','centimeters',...
@@ -71,7 +65,7 @@ signal();
             'horizontalalignment','left','fontweight','bold');
         
         rnames={'Frequency','|Current|'};
-        t = uitable('units','centimeters','position',[0.25,11.5,38,2],...
+        tbl = uitable('units','centimeters','position',[0.25,11.5,38,2],...
             'RowName',rnames);
         
         [pks,locs]=findpeaks((abs(Y)/N),'minpeakdistance',45,...
@@ -86,24 +80,442 @@ signal();
             
         z(:,all(~any(z),1))=[];
         [~,I]=sort(z(1,:));
-        z(1,1)
-        z(1,2)
+
         d=z(:,I);
-        set(t,'Data',d); 
-        
-        assignin('base','d',d);
-        
+        set(tbl,'Data',d);  
+       
         xlabel(ax4, 'Time (seconds)');
         ylabel(ax4, 'Amplitude (pixels per sample unit)');
         title(ax4, 'Current waveform');
 
         xlabel(ax5, 'Frequency (Hz)');
         ylabel(ax5, '|Current|');
-        title(ax5, 'Frequency Spectrum');
+        title(ax5, 'Frequency Spectrum');         
+                
+        h(1)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[3.5,10.5,1.5,0.5],'string','1st',...
+            'Callback',@plotH1);
+        h(2)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[5.6,10.5,1.5,0.5],'string','3th',...
+            'Callback',@plotH2);
+        h(3)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[7.7,10.5,1.5,0.5],'string','5th',...
+            'Callback',@plotH3);
+        h(4)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[9.8,10.5,1.5,0.5],'string','7th',...
+            'Callback',@plotH4);
+        h(5)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[11.9,10.5,1.5,0.5],'string','9th',...
+            'Callback',@plotH5);
+        h(6)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[14,10.5,1.5,0.5],'string','11th',...
+            'Callback',@plotH6);        
+        h(7)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[16.1,10.5,1.5,0.5],'string','13th',...
+            'Callback',@plotH7);
+        h(8)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[18.2,10.5,1.5,0.5],'string','15th',...
+            'Callback',@plotH8);
+        h(9)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[20.1,10.5,1.5,0.5],'string','17th',...
+            'Callback',@plotH9);
+        h(10)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[22.2,10.5,1.5,0.5],'string','19th',...
+            'Callback',@plotH10);
+        h(11)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[24.3,10.5,1.5,0.5],'string','21st',...
+            'Callback',@plotH11);
+        h(12)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[26.4,10.5,1.5,0.5],'string','23th',...
+            'Callback',@plotH12);
+        h(13)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[28.5,10.5,1.5,0.5],'string','25th',...
+            'Callback',@plotH13);
+        h(14)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[30.6,10.5,1.5,0.5],'string','27th',...
+            'Callback',@plotH14);
+        h(15)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[32.7,10.5,1.5,0.5],'string','29th',...
+            'Callback',@plotH15);
+        h(16)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[34.8,10.5,1.5,0.5],'string','30th',...
+            'Callback',@plotH16);
         
-
+        function plotH1(~,~)
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0);
+            plotHarm();
+        end
         
+        function plotH2(~,~)
+            set(h(1),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH3(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH4(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH5(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH6(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH7(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH8(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH9(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH10(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH11(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH12(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH13(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH14(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(15),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH15(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(16),'value',0)
+            plotHarm();
+        end
+        
+        function plotH16(~,~)
+            set(h(1),'value',0);
+            set(h(2),'value',0);
+            set(h(3),'value',0);
+            set(h(4),'value',0);
+            set(h(5),'value',0);
+            set(h(6),'value',0);
+            set(h(7),'value',0);
+            set(h(8),'value',0);
+            set(h(9),'value',0);
+            set(h(10),'value',0);
+            set(h(11),'value',0);
+            set(h(12),'value',0);
+            set(h(13),'value',0);
+            set(h(14),'value',0);
+            set(h(15),'value',0)
+            plotHarm();
+        end
+        
+        function plotHarm(~,~)
+            
+            if get(h(1),'value')
+                fc=z(1,1); 
+            elseif get(h(2),'value')
+                fc=z(1,2);
+            elseif get(h(3),'value')
+                fc=z(1,3);
+            elseif get(h(4),'value')
+                fc=z(1,4);
+            elseif get(h(5),'value')
+                fc=z(1,5);
+            elseif get(h(6),'value')
+                fc=z(1,6);
+            elseif get(h(7),'value')
+                fc=z(1,7);
+            elseif get(h(8),'value')
+                fc=z(1,8);
+            elseif get(h(9),'value')
+                fc=z(1,9);
+            elseif get(h(10),'value')
+                fc=z(1,10);
+            elseif get(h(11),'value')
+                fc=z(1,11);
+            elseif get(h(12),'value')
+                fc=z(1,12);
+            elseif get(h(13),'value')
+                fc=z(1,13);
+            elseif get(h(14),'value')
+                fc=z(1,14);
+            elseif get(h(15),'value')
+                fc=z(1,15);
+            elseif get(h(16),'value')
+                fc=z(1,16);
+            else
+                fc=0;        
+            end            
+           
+            indfc=find(f(f<=fc), 1, 'last' );
+            %ffc=f(indfc);
+            indlow=indfc-1;
+            %flow=f(indlow);
+            indhigh=indfc+1;
+            %fhigh=f(indhigh);           
 
+            Y2=zeros(length(Y),1);
+            
+            if fc>0
+                Y2(indlow:indhigh)=Y(indlow:indhigh);
+            else
+                Y2=zeros(length(Y),1);
+            end
+
+            Yi=ifft(ifftshift(Y2));
+            
+            plot(ax6,t,Yi);
+            grid(ax6,'on');
+
+            plot(ax7,f,abs(Y2)/N);
+            set(ax7,'xlim',[0 2100]);
+            grid(ax7,'on');
+            
+            xlabel(ax6, 'Time (seconds)');
+            ylabel(ax6, 'Amplitude (pixels per sample unit)');
+            title(ax6, 'Current waveform');
+
+            xlabel(ax7, 'Frequency (Hz)');
+            ylabel(ax7, '|Current|');
+            title(ax7, 'Frequency Spectrum');  
+        end
+      
     end
 
 
@@ -126,116 +538,6 @@ E.h = uicontrol('style','pushbutton','units','centimeters',...
         close(eh);
     end
 
-filt.h = uicontrol('style','pushbutton','units','centimeters',...
-    'position',[10.5,0.25,5,1],'string','Filter signal',...
-    'callback',@fh_call);
-
-    function fh_call(varargin)
-        y=evalin('base','Total');
-        t=evalin('base','time');
-        
-        q=500;
-        k=30;
-        fc=50;
-        wc=2*pi*fc;
-       
-%         num=k*[1 0];
-%         den=[q/wc 1 q*wc]; 
-
-        H=tf( k*[1 0], [q/wc 1 q*wc]);
-        
-        lsim(ax6,H,y,t);
-% out=filter(num,den,y);
-% plot(ax6,t,out);
-        grid(ax6,'on');
-        
-        fs=44100;
-        N = size(t,1);
-        DF = fftshift(fft(out));
-        dF = fs/N;
-        f = -fs/2:dF:fs/2-dF;        
-
-        plot(ax7,f,abs(DF)/N); 
-        set(ax7,'xlim',[0 2500]);
-        grid(ax7, 'on');
-        
-
-        bodeplot(H); grid on;
-        handler=gcr;
-        handler.AxesGrid.Xunits = 'Hz'; 
-        handler.AxesGrid.Yunits = {'abs','deg'}; 
-        handler.AxesGrid.Grid = 'on';
-        
-        
-        
-%         y=evalin('base','Total');
-%         t=evalin('base','time');
-% %         d=evalin('base','d');
-% %         f=evalin('base','f');
-%         Fs = 41100;  % Sampling Frequency
-% 
-%         Fstop1 = 48;          % First Stopband Frequency
-%         Fpass1 = 49;          % First Passband Frequency
-%         Fpass2 = 51;          % Second Passband Frequency
-%         Fstop2 = 52;          % Second Stopband Frequency
-%         Astop1 = 3;           % First Stopband Attenuation (dB)
-%         Apass  = 1;           % Passband Ripple (dB)
-%         Astop2 = 3;           % Second Stopband Attenuation (dB)
-%         match  = 'stopband';  % Band to match exactly
-% 
-%         % Construct an FDESIGN object and call its BUTTER method.
-%         h  = fdesign.bandpass(Fstop1, Fpass1, Fpass2, Fstop2, Astop1, Apass, ...
-%                               Astop2, Fs);
-%         Hd = design(h, 'butter', 'MatchExactly', match);
-%         DataFilt=filter(Hd,y);
-%         
-%         plot(ax6,t,DataFilt);
-%         grid(ax6,'on');
-%         
-%         fs=44100;
-%         N = size(t,1);
-%         DF = fftshift(fft(DataFilt));
-%         dF = fs/N;
-%         f = -fs/2:dF:fs/2-dF;        
-% 
-%         plot(ax7,f,abs(DF)/N); 
-%         set(ax7,'xlim',[0 2500]);
-%         grid(ax7, 'on');
-%         
-%         w=(0:10:2000);
-%         [b,a]=tf(Hd);
-%         Y=freqs(b,a,w); 
-%         y1=abs(Y);
-%         y2=angle(Y);
-%         semilogx(ax8,w,20*log10(y1));
-%         grid (ax8,'on');
-%   
-%         semilogx(ax9,w,y2*(180/pi));
-%         grid(ax9,'on');
-
-        
-%         omega=(0:3000)*pi/3000;
-%         hp=freqz(DataFilt,1,omega);
-%         
-%         plot(ax8,omega/pi,abs(hp));
-%         plot(ax9,omega/pi,angle(hp));
-        
-%         [hh,w]=freqz(DataFilt);
-%         plot(ax8,w,20*log10(abs(hh)));
-%         grid(ax8,'on');
-% 
-%         [phi,w]=phasez(DataFilt);
-%         plot(ax9,w,20*log10(abs(phi)));
-%         grid(ax9,'on');
-        
-%         xlabel(ax8, 'Radians/sample');
-%         ylabel(ax8, 'dB');
-%         
-%         xlabel(ax9, 'Radians/sample');
-%         ylabel(ax9, 'dB');
-
-    end
-
 h(100) = uicontrol('style','checkbox','units','centimeters',...
     'position',[34.5,18.5,3.5,1],'string','Place/use cursor',...
     'Callback',@placeCursor); 
@@ -248,13 +550,4 @@ h(100) = uicontrol('style','checkbox','units','centimeters',...
             zoom on;
         end 
     end
-
-% uicontrol('style','slider','parent',h,'units','centimeters',...
-%     'position',[38 1 0.2 1],'value',1,'CallBack',@sliderCall);
-% 
-%     function sliderCall
-%         val = get(hObject,'Value');
-%         set(h, 'Position', [0 -val 1 1.95]);
-%     end
-
 end
