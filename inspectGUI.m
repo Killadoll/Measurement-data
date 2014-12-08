@@ -8,9 +8,9 @@ ax4=axes('Units','centimeters','Position',[2 15 17 3],...
 ax5=axes('Units','centimeters','Position',[20.5 15 17 3],...
     'Parent',h); 
 
-ax6=axes('Units','centimeters','Position',[2 6 17 3],...
+ax6=axes('Units','centimeters','Position',[2 6.5 17 3],...
     'Parent',h);
-ax7=axes('Units','centimeters','Position',[20.5 6 17 3],...
+ax7=axes('Units','centimeters','Position',[2 2 17 3],...
     'Parent',h);
 
 
@@ -65,7 +65,7 @@ signal();
             'horizontalalignment','left','fontweight','bold');
         
         rnames={'Frequency','|Current|'};
-        tbl = uitable('units','centimeters','position',[0.25,11.5,38,2],...
+        tbl1=uitable('units','centimeters','position',[0.25,11.5,38,2],...
             'RowName',rnames);
         
         [pks,locs]=findpeaks((abs(Y)/N),'minpeakdistance',45,...
@@ -82,7 +82,7 @@ signal();
         [~,I]=sort(z(1,:));
 
         d=z(:,I);
-        set(tbl,'Data',d);  
+        set(tbl1,'Data',d);  
        
         xlabel(ax4, 'Time (seconds)');
         ylabel(ax4, 'Amplitude (pixels per sample unit)');
@@ -93,9 +93,9 @@ signal();
         title(ax5, 'Frequency Spectrum');         
                 
         h(1)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[3.5,10.5,1.5,0.5],'string','1st',...
-            'Callback',@plotH1);
-        h(2)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[3.5,10.5,1.5,0.5],'string','Fund',...
+            'Callback',@plotH1);   
+       h(2)=uicontrol('style','checkbox','units','centimeters',...
             'position',[5.6,10.5,1.5,0.5],'string','3th',...
             'Callback',@plotH2);
         h(3)=uicontrol('style','checkbox','units','centimeters',...
@@ -141,7 +141,13 @@ signal();
             'position',[34.8,10.5,1.5,0.5],'string','30th',...
             'Callback',@plotH16);
         
+        out=cell(20,4);
+        Yf=zeros(length(Y),1);        
+        
+        plotH1();
+        
         function plotH1(~,~)
+            set(h(1),'value',1);
             set(h(2),'value',0);
             set(h(3),'value',0);
             set(h(4),'value',0);
@@ -444,9 +450,8 @@ signal();
             set(h(15),'value',0)
             plotHarm();
         end
-        
-        function plotHarm(~,~)
-            
+                       
+        function plotHarm(~,~)            
             if get(h(1),'value')
                 fc=z(1,1); 
             elseif get(h(2),'value')
@@ -488,24 +493,41 @@ signal();
             indlow=indfc-1;
             %flow=f(indlow);
             indhigh=indfc+1;
-            %fhigh=f(indhigh);           
-
-            Y2=zeros(length(Y),1);
+            %fhigh=f(indhigh); 
             
-            if fc>0
-                Y2(indlow:indhigh)=Y(indlow:indhigh);
+            Yh=zeros(length(Y),1);
+            
+            if fc>0  
+                if isequal(fc,z(1,1))
+                   Yf(indlow:indhigh)=Y(indlow:indhigh); 
+                else                    
+                    Yh(indlow:indhigh)=Y(indlow:indhigh);
+                end
             else
-                Y2=zeros(length(Y),1);
+                Yf=zeros(length(Y),1);
+                Yh=zeros(length(Y),1);
             end
-
-            Yi=ifft(ifftshift(Y2));
             
-            plot(ax6,t,Yi);
-            grid(ax6,'on');
-
-            plot(ax7,f,abs(Y2)/N);
-            set(ax7,'xlim',[0 2100]);
-            grid(ax7,'on');
+            Yi_f=ifft(ifftshift(Yf));
+            Yi_ff=fftshift(fft(Yi_f));
+            Yi_h=ifft(ifftshift(Yh));
+            Yi_hf=fftshift(fft(Yi_h));            
+            
+            if isequal(fc,z(1,1))               
+                plot(ax6,t,real(Yi_f));
+                grid(ax6,'on');
+                
+                plot(ax7,f,abs(Yf)/N);
+                set(ax7,'xlim',[0 2100]);
+                grid(ax7,'on');
+            else               
+                plot(ax6,t,real(Yi_h));
+                grid(ax6,'on');
+                
+                plot(ax7,f,abs(Yh)/N);
+                set(ax7,'xlim',[0 2100]);
+                grid(ax7,'on');
+            end                        
             
             xlabel(ax6, 'Time (seconds)');
             ylabel(ax6, 'Amplitude (pixels per sample unit)');
@@ -514,7 +536,108 @@ signal();
             xlabel(ax7, 'Frequency (Hz)');
             ylabel(ax7, '|Current|');
             title(ax7, 'Frequency Spectrum');  
-        end
+            
+            rnames={'Fundamental','3th','5th','7th','9th','11th','13th',...
+                '15th','17th','19th','21st','23th','25th','27th',...
+                '29th','30th'};
+            cnames={'Amplitude','Frequency','Phase','% THD of fundamental'};
+            tbl2=uitable('units','centimeters','position',[19.5,0.5,15,9.5],...
+                'RowName',rnames,'ColumnName',cnames);
+            set(tbl2,'columnwidt',{'auto','auto',100,'auto'});
+                       
+            [~,idx_yif]=max(abs(Yi_ff));
+            [~,idx_yih]=max(abs(Yi_hf));
+            phase_yif=angle(Yi_ff(idx_yif));
+            phase_yih=angle(Yi_hf(idx_yih));
+            phase_shift=phase_yih-phase_yif;
+                           
+            
+            if isequal(fc,z(1,1))
+                out{1,1}=sprintf('%c%c%c',num2str(z(2,1)),' ','A');
+                out{1,2}=sprintf('%c%c%c%c',num2str(z(1,1)),' ','Hz');
+                out{1,3}=sprintf('%f%c%c',(phase_yif/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,2))
+                out{2,1}=sprintf('%c%c%c',num2str(z(2,2)),' ','A');
+                out{2,2}=sprintf('%c%c%c%c',num2str(z(1,2)),' ','Hz');
+                out{2,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,3))
+                out{3,1}=sprintf('%c%c%c',num2str(z(2,3)),' ','A');
+                out{3,2}=sprintf('%c%c%c%c',num2str(z(1,3)),' ','Hz');
+                out{3,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,4))
+                out{4,1}=sprintf('%c%c%c',num2str(z(2,4)),' ','A');
+                out{4,2}=sprintf('%c%c%c%c',num2str(z(1,4)),' ','Hz');
+                out{4,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,5))
+                out{5,1}=sprintf('%c%c%c',num2str(z(2,5)),' ','A');
+                out{5,2}=sprintf('%c%c%c%c',num2str(z(1,5)),' ','Hz');
+                out{5,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,6))
+                out{6,1}=sprintf('%c%c%c',num2str(z(2,6)),' ','A');
+                out{6,2}=sprintf('%c%c%c%c',num2str(z(1,6)),' ','Hz');
+                out{6,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,7))
+                out{7,1}=sprintf('%c%c%c',num2str(z(2,7)),' ','A');
+                out{7,2}=sprintf('%c%c%c%c',num2str(z(1,7)),' ','Hz');
+                out{7,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,8))
+                out{8,1}=sprintf('%c%c%c',num2str(z(2,8)),' ','A');
+                out{8,2}=sprintf('%c%c%c%c',num2str(z(1,8)),' ','Hz');
+                out{8,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,9))
+                out{9,1}=sprintf('%c%c%c',num2str(z(2,9)),' ','A');
+                out{9,2}=sprintf('%c%c%c%c',num2str(z(1,9)),' ','Hz');
+                out{9,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,10))
+                out{10,1}=sprintf('%c%c%c',num2str(z(2,10)),' ','A');
+                out{10,2}=sprintf('%c%c%c%c',num2str(z(1,10)),' ','Hz');
+                out{10,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,11))
+                out{11,1}=sprintf('%c%c%c',num2str(z(2,11)),' ','A');
+                out{11,2}=sprintf('%c%c%c%c',num2str(z(1,11)),' ','Hz');
+                out{11,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,12))
+                out{12,1}=sprintf('%c%c%c',num2str(z(2,12)),' ','A');
+                out{12,2}=sprintf('%c%c%c%c',num2str(z(1,12)),' ','Hz');
+                out{12,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,13))
+                out{13,1}=sprintf('%c%c%c',num2str(z(2,13)),' ','A');
+                out{13,2}=sprintf('%c%c%c%c',num2str(z(1,13)),' ','Hz');
+                out{13,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,14))
+                out{14,1}=sprintf('%c%c%c',num2str(z(2,14)),' ','A');
+                out{14,2}=sprintf('%c%c%c%c',num2str(z(1,14)),' ','Hz');
+                out{14,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,15))
+                out{15,1}=sprintf('%c%c%c',num2str(z(2,15)),' ','A');
+                out{15,2}=sprintf('%c%c%c%c',num2str(z(1,15)),' ','Hz');
+                out{15,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,16))
+                out{16,1}=sprintf('%c%c%c',num2str(z(2,16)),' ','A');
+                out{16,2}=sprintf('%c%c%c%c',num2str(z(1,16)),' ','Hz');
+                out{16,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,17))
+                out{17,1}=sprintf('%c%c%c',num2str(z(2,17)),' ','A');
+                out{17,2}=sprintf('%c%c%c%c',num2str(z(1,17)),' ','Hz');
+                out{17,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,18))
+                out{18,1}=sprintf('%c%c%c',num2str(z(2,18)),' ','A');
+                out{18,2}=sprintf('%c%c%c%c',num2str(z(1,18)),' ','Hz');
+                out{18,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,19))
+                out{19,1}=sprintf('%c%c%c',num2str(z(2,19)),' ','A');
+                out{19,2}=sprintf('%c%c%c%c',num2str(z(1,19)),' ','Hz');
+                out{19,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            elseif isequal(fc,z(1,20))
+                out{20,1}=sprintf('%c%c%c',num2str(z(2,20)),' ','A');
+                out{20,2}=sprintf('%c%c%c%c',num2str(z(1,20)),' ','Hz');
+                out{20,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+            end
+            
+                       
+            set(tbl2,'Data',out); 
+            
+          end
       
     end
 
@@ -530,7 +653,7 @@ G.h=uicontrol('style','pushbutton','units','centimeters',...
     end
 
 E.h = uicontrol('style','pushbutton','units','centimeters',...
-    'position',[5.5,0.25,5,1],'string','End Program',...
+    'position',[14,0.25,5,1],'string','End Program',...
     'callback',@eh_call);
 
     function eh_call(varargin)
