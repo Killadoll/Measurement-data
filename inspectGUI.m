@@ -3,17 +3,34 @@ function inspectGUI
 h=figure('units','centimeters','position',[1,1,38.5,20],...
     'toolbar','none','menu','none','name','Signal inspection');
 
-ax4=axes('Units','centimeters','Position',[2 15 17 3],...
+ax4=axes('Units','centimeters','Position',[2 16 17 2],...
     'Parent',h);         
-ax5=axes('Units','centimeters','Position',[20.5 15 17 3],...
+ax5=axes('Units','centimeters','Position',[20.5 16 17 2],...
     'Parent',h); 
 
-ax6=axes('Units','centimeters','Position',[2 6.5 17 3],...
+ax6=axes('Units','centimeters','Position',[2 7.5 17 3],...
     'Parent',h);
-ax7=axes('Units','centimeters','Position',[2 2 17 3],...
+ax7=axes('Units','centimeters','Position',[2 3 17 3],...
     'Parent',h);
 
+% Check if POI lib is loaded - try to autoload 
+if exist('org.apache.poi.ss.usermodel.WorkbookFactory', 'class') ~= 8 ... 
+|| exist('org.apache.poi.hssf.usermodel.HSSFWorkbook', 'class') ~= 8 ... 
+|| exist('org.apache.poi.xssf.usermodel.XSSFWorkbook', 'class') ~= 8 
+try 
+cpath=fileparts(which(mfilename)); 
+javaaddpath([cpath filesep 'poi_library' filesep 'poi-3.8-20120326.jar']); 
+javaaddpath([cpath filesep 'poi_library' filesep 'poi-ooxml-3.8-20120326.jar']); 
+javaaddpath([cpath filesep 'poi_library' filesep 'poi-ooxml-schemas-3.8-20120326.jar']); 
+javaaddpath([cpath filesep 'poi_library' filesep 'xmlbeans-2.3.0.jar']); 
+javaaddpath([cpath filesep 'poi_library' filesep 'dom4j-1.6.1.jar']); 
+catch 
+error('xlWrite:poiLibsNotLoaded',... 
+'The POI library is not loaded in Matlab.\nAutoloading failed ...\nCheck that POI jar files are in Matlab Java path!'); 
+end 
 
+end
+    
 uicontrol('style','Text','units','centimeters',...
     'position',[0.5,19,6,0.5],'string','Current sources in signal:',...
     'backgroundcolor','white','horizontalalignment','left',...
@@ -65,7 +82,7 @@ signal();
             'horizontalalignment','left','fontweight','bold');
         
         rnames={'Frequency','|Current|'};
-        tbl1=uitable('units','centimeters','position',[0.25,11.5,38,2],...
+        tbl1=uitable('units','centimeters','position',[0.25,12.5,38,2],...
             'RowName',rnames);
         
         [pks,locs]=findpeaks((abs(Y)/N),'minpeakdistance',45,...
@@ -93,55 +110,56 @@ signal();
         title(ax5, 'Frequency Spectrum');         
                 
         h(1)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[3.5,10.5,1.5,0.5],'string','Fund',...
+            'position',[3.5,11.5,1.5,0.5],'string','Fund',...
             'Callback',@plotH1);   
        h(2)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[5.6,10.5,1.5,0.5],'string','3th',...
+            'position',[5.6,11.5,1.5,0.5],'string','3th',...
             'Callback',@plotH2);
         h(3)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[7.7,10.5,1.5,0.5],'string','5th',...
+            'position',[7.7,11.5,1.5,0.5],'string','5th',...
             'Callback',@plotH3);
         h(4)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[9.8,10.5,1.5,0.5],'string','7th',...
+            'position',[9.8,11.5,1.5,0.5],'string','7th',...
             'Callback',@plotH4);
         h(5)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[11.9,10.5,1.5,0.5],'string','9th',...
+            'position',[11.9,11.5,1.5,0.5],'string','9th',...
             'Callback',@plotH5);
         h(6)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[14,10.5,1.5,0.5],'string','11th',...
+            'position',[14,11.5,1.5,0.5],'string','11th',...
             'Callback',@plotH6);        
         h(7)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[16.1,10.5,1.5,0.5],'string','13th',...
+            'position',[16.1,11.5,1.5,0.5],'string','13th',...
             'Callback',@plotH7);
         h(8)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[18.2,10.5,1.5,0.5],'string','15th',...
+            'position',[18.2,11.5,1.5,0.5],'string','15th',...
             'Callback',@plotH8);
         h(9)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[20.1,10.5,1.5,0.5],'string','17th',...
+            'position',[20.1,11.5,1.5,0.5],'string','17th',...
             'Callback',@plotH9);
         h(10)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[22.2,10.5,1.5,0.5],'string','19th',...
+            'position',[22.2,11.5,1.5,0.5],'string','19th',...
             'Callback',@plotH10);
         h(11)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[24.3,10.5,1.5,0.5],'string','21st',...
+            'position',[24.3,11.5,1.5,0.5],'string','21st',...
             'Callback',@plotH11);
         h(12)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[26.4,10.5,1.5,0.5],'string','23th',...
+            'position',[26.4,11.5,1.5,0.5],'string','23th',...
             'Callback',@plotH12);
         h(13)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[28.5,10.5,1.5,0.5],'string','25th',...
+            'position',[28.5,11.5,1.5,0.5],'string','25th',...
             'Callback',@plotH13);
         h(14)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[30.6,10.5,1.5,0.5],'string','27th',...
+            'position',[30.6,11.5,1.5,0.5],'string','27th',...
             'Callback',@plotH14);
         h(15)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[32.7,10.5,1.5,0.5],'string','29th',...
+            'position',[32.7,11.5,1.5,0.5],'string','29th',...
             'Callback',@plotH15);
         h(16)=uicontrol('style','checkbox','units','centimeters',...
-            'position',[34.8,10.5,1.5,0.5],'string','30th',...
+            'position',[34.8,11.5,1.5,0.5],'string','30th',...
             'Callback',@plotH16);
         
-        out=cell(20,4);
+        out=cell(20,5);
+        xls_out=cell(21,6);
         Yf=zeros(length(Y),1);        
         
         plotH1();
@@ -540,102 +558,165 @@ signal();
             rnames={'Fundamental','3th','5th','7th','9th','11th','13th',...
                 '15th','17th','19th','21st','23th','25th','27th',...
                 '29th','30th'};
-            cnames={'Amplitude','Frequency','Phase','% THD of fundamental'};
-            tbl2=uitable('units','centimeters','position',[19.5,0.5,15,9.5],...
+            cnames={'Amplitude','Frequency','Phase','Phase w.r.t fund.','% THD of fundamental'};
+            tbl2=uitable('units','centimeters','position',[19.5,1.5,18,9.5],...
                 'RowName',rnames,'ColumnName',cnames);
-            set(tbl2,'columnwidt',{'auto','auto',100,'auto'});
+            set(tbl2,'columnwidt',{'auto','auto',100,'auto','auto'});
                        
             [~,idx_yif]=max(abs(Yi_ff));
             [~,idx_yih]=max(abs(Yi_hf));
             phase_yif=angle(Yi_ff(idx_yif));
             phase_yih=angle(Yi_hf(idx_yih));
-            phase_shift=phase_yih-phase_yif;
-                           
+            phase_shift=phase_yih-phase_yif; 
             
             if isequal(fc,z(1,1))
                 out{1,1}=sprintf('%c%c%c',num2str(z(2,1)),' ','A');
                 out{1,2}=sprintf('%c%c%c%c',num2str(z(1,1)),' ','Hz');
                 out{1,3}=sprintf('%f%c%c',(phase_yif/pi)*180,' ',char(176));
+                out{1,4}=sprintf('%f%c%c',0,' ',char(176)); 
+                out{1,5}=sprintf('%c%c%c','100',' ','%');
             elseif isequal(fc,z(1,2))
                 out{2,1}=sprintf('%c%c%c',num2str(z(2,2)),' ','A');
                 out{2,2}=sprintf('%c%c%c%c',num2str(z(1,2)),' ','Hz');
-                out{2,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{2,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{2,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{2,5}=sprintf('%c%c%c',num2str(z(2,2)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,3))
                 out{3,1}=sprintf('%c%c%c',num2str(z(2,3)),' ','A');
                 out{3,2}=sprintf('%c%c%c%c',num2str(z(1,3)),' ','Hz');
-                out{3,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{3,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{3,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{3,5}=sprintf('%c%c%c',num2str(z(2,3)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,4))
                 out{4,1}=sprintf('%c%c%c',num2str(z(2,4)),' ','A');
                 out{4,2}=sprintf('%c%c%c%c',num2str(z(1,4)),' ','Hz');
-                out{4,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{4,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{4,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{4,5}=sprintf('%c%c%c',num2str(z(2,4)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,5))
                 out{5,1}=sprintf('%c%c%c',num2str(z(2,5)),' ','A');
                 out{5,2}=sprintf('%c%c%c%c',num2str(z(1,5)),' ','Hz');
-                out{5,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{5,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{5,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{5,5}=sprintf('%c%c%c',num2str(z(2,5)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,6))
                 out{6,1}=sprintf('%c%c%c',num2str(z(2,6)),' ','A');
                 out{6,2}=sprintf('%c%c%c%c',num2str(z(1,6)),' ','Hz');
-                out{6,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{6,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{6,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{6,5}=sprintf('%c%c%c',num2str(z(2,6)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,7))
                 out{7,1}=sprintf('%c%c%c',num2str(z(2,7)),' ','A');
                 out{7,2}=sprintf('%c%c%c%c',num2str(z(1,7)),' ','Hz');
-                out{7,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{7,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{7,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{7,5}=sprintf('%c%c%c',num2str(z(2,7)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,8))
                 out{8,1}=sprintf('%c%c%c',num2str(z(2,8)),' ','A');
                 out{8,2}=sprintf('%c%c%c%c',num2str(z(1,8)),' ','Hz');
-                out{8,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{8,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{8,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{8,5}=sprintf('%c%c%c',num2str(z(2,8)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,9))
                 out{9,1}=sprintf('%c%c%c',num2str(z(2,9)),' ','A');
                 out{9,2}=sprintf('%c%c%c%c',num2str(z(1,9)),' ','Hz');
-                out{9,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{9,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{9,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{9,5}=sprintf('%c%c%c',num2str(z(2,9)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,10))
                 out{10,1}=sprintf('%c%c%c',num2str(z(2,10)),' ','A');
                 out{10,2}=sprintf('%c%c%c%c',num2str(z(1,10)),' ','Hz');
-                out{10,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{10,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{10,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{10,5}=sprintf('%c%c%c',num2str(z(2,10)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,11))
                 out{11,1}=sprintf('%c%c%c',num2str(z(2,11)),' ','A');
                 out{11,2}=sprintf('%c%c%c%c',num2str(z(1,11)),' ','Hz');
-                out{11,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{11,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{11,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{11,5}=sprintf('%c%c%c',num2str(z(2,11)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,12))
                 out{12,1}=sprintf('%c%c%c',num2str(z(2,12)),' ','A');
                 out{12,2}=sprintf('%c%c%c%c',num2str(z(1,12)),' ','Hz');
-                out{12,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{12,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{12,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{12,5}=sprintf('%c%c%c',num2str(z(2,12)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,13))
                 out{13,1}=sprintf('%c%c%c',num2str(z(2,13)),' ','A');
                 out{13,2}=sprintf('%c%c%c%c',num2str(z(1,13)),' ','Hz');
-                out{13,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{13,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{13,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{13,5}=sprintf('%c%c%c',num2str(z(2,13)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,14))
                 out{14,1}=sprintf('%c%c%c',num2str(z(2,14)),' ','A');
                 out{14,2}=sprintf('%c%c%c%c',num2str(z(1,14)),' ','Hz');
-                out{14,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{14,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{14,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{14,5}=sprintf('%c%c%c',num2str(z(2,14)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,15))
                 out{15,1}=sprintf('%c%c%c',num2str(z(2,15)),' ','A');
                 out{15,2}=sprintf('%c%c%c%c',num2str(z(1,15)),' ','Hz');
-                out{15,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{15,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{15,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{15,5}=sprintf('%c%c%c',num2str(z(2,15)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,16))
                 out{16,1}=sprintf('%c%c%c',num2str(z(2,16)),' ','A');
                 out{16,2}=sprintf('%c%c%c%c',num2str(z(1,16)),' ','Hz');
-                out{16,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{16,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{16,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{16,5}=sprintf('%c%c%c',num2str(z(2,16)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,17))
                 out{17,1}=sprintf('%c%c%c',num2str(z(2,17)),' ','A');
                 out{17,2}=sprintf('%c%c%c%c',num2str(z(1,17)),' ','Hz');
-                out{17,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{17,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{17,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{17,5}=sprintf('%c%c%c',num2str(z(2,17)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,18))
                 out{18,1}=sprintf('%c%c%c',num2str(z(2,18)),' ','A');
                 out{18,2}=sprintf('%c%c%c%c',num2str(z(1,18)),' ','Hz');
-                out{18,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{18,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{18,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{18,5}=sprintf('%c%c%c',num2str(z(2,18)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,19))
                 out{19,1}=sprintf('%c%c%c',num2str(z(2,19)),' ','A');
                 out{19,2}=sprintf('%c%c%c%c',num2str(z(1,19)),' ','Hz');
-                out{19,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{19,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{19,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{19,5}=sprintf('%c%c%c',num2str(z(2,19)/(z(2,1)/100)),' ','%');
             elseif isequal(fc,z(1,20))
                 out{20,1}=sprintf('%c%c%c',num2str(z(2,20)),' ','A');
                 out{20,2}=sprintf('%c%c%c%c',num2str(z(1,20)),' ','Hz');
-                out{20,3}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
-            end
-            
+                out{20,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
+                out{20,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                out{20,5}=sprintf('%c%c%c',num2str(z(2,20)/(z(2,1)/100)),' ','%');
+            end           
                        
             set(tbl2,'Data',out); 
+            
+            ex.h = uicontrol('style','pushbutton','units','centimeters',...
+    'position',[7,0.25,5,1],'string','Write to Excel',...
+    'callback',@ex_call);
+
+    function ex_call(varargin)
+%         lab=evalin('base','Tot_lab')
+%         l=length(lab)
+        [~,sheet]=xlsfinfo('Signal information.xlsx')
+%         
+%         if strcmp(lab(l-1),sheet)
+%                         
+%             disp('ja');
+
+%             xlwrite('Signal information',out,'Laptop','B2');
+%             xlwrite('Signal information',cnames,'Laptop','B1');
+
+for c=2:length(rnames)
+    xls=sprintf('%c%d','A',c);
+    xlwrite('Signal information',rnames(c),sheet,xls);
+end
+
+%         else
+%             disp('nee');
+%         end
             
           end
       
@@ -661,16 +742,27 @@ E.h = uicontrol('style','pushbutton','units','centimeters',...
         close(eh);
     end
 
+
+        
+    end
+
 h(100) = uicontrol('style','checkbox','units','centimeters',...
     'position',[34.5,18.5,3.5,1],'string','Place/use cursor',...
     'Callback',@placeCursor); 
 
-    function placeCursor(~,~)
+    function placeCursor(~,~) 
+        
+                
+        
        if get(h(100),'Value')
             datacursormode on;
         else
             datacursormode off;
             zoom on;
-        end 
+       end 
+        
+
+    
+    
     end
 end
