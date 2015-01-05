@@ -13,24 +13,7 @@ ax6=axes('Units','centimeters','Position',[2 7.5 17 3],...
 ax7=axes('Units','centimeters','Position',[2 3 17 3],...
     'Parent',h);
 
-% Check if POI lib is loaded - try to autoload 
-if exist('org.apache.poi.ss.usermodel.WorkbookFactory', 'class') ~= 8 ... 
-|| exist('org.apache.poi.hssf.usermodel.HSSFWorkbook', 'class') ~= 8 ... 
-|| exist('org.apache.poi.xssf.usermodel.XSSFWorkbook', 'class') ~= 8 
-try 
-cpath=fileparts(which(mfilename)); 
-javaaddpath([cpath filesep 'poi_library' filesep 'poi-3.8-20120326.jar']); 
-javaaddpath([cpath filesep 'poi_library' filesep 'poi-ooxml-3.8-20120326.jar']); 
-javaaddpath([cpath filesep 'poi_library' filesep 'poi-ooxml-schemas-3.8-20120326.jar']); 
-javaaddpath([cpath filesep 'poi_library' filesep 'xmlbeans-2.3.0.jar']); 
-javaaddpath([cpath filesep 'poi_library' filesep 'dom4j-1.6.1.jar']); 
-catch 
-error('xlWrite:poiLibsNotLoaded',... 
-'The POI library is not loaded in Matlab.\nAutoloading failed ...\nCheck that POI jar files are in Matlab Java path!'); 
-end 
-
-end
-    
+  
 uicontrol('style','Text','units','centimeters',...
     'position',[0.5,19,6,0.5],'string','Current sources in signal:',...
     'backgroundcolor','white','horizontalalignment','left',...
@@ -159,7 +142,6 @@ signal();
             'Callback',@plotH16);
         
         out=cell(20,5);
-        xls_out=cell(21,6);
         Yf=zeros(length(Y),1);        
         
         plotH1();
@@ -465,10 +447,10 @@ signal();
             set(h(12),'value',0);
             set(h(13),'value',0);
             set(h(14),'value',0);
-            set(h(15),'value',0)
+            set(h(15),'value',0);
             plotHarm();
-        end
-                       
+        end        
+                      
         function plotHarm(~,~)            
             if get(h(1),'value')
                 fc=z(1,1); 
@@ -558,7 +540,7 @@ signal();
             rnames={'Fundamental','3th','5th','7th','9th','11th','13th',...
                 '15th','17th','19th','21st','23th','25th','27th',...
                 '29th','30th'};
-            cnames={'Amplitude','Frequency','Phase','Phase w.r.t fund.','% THD of fundamental'};
+            cnames={'Amplitude','Frequency','Phase','Phaseshift','THD_percentage_of_fundamental'};
             tbl2=uitable('units','centimeters','position',[19.5,1.5,18,9.5],...
                 'RowName',rnames,'ColumnName',cnames);
             set(tbl2,'columnwidt',{'auto','auto',100,'auto','auto'});
@@ -694,34 +676,37 @@ signal();
             set(tbl2,'Data',out); 
             
             ex.h = uicontrol('style','pushbutton','units','centimeters',...
-    'position',[7,0.25,5,1],'string','Write to Excel',...
-    'callback',@ex_call);
+                'position',[7,0.25,5,1],'string','Write to CVS',...
+                'callback',@ex_call);
 
-    function ex_call(varargin)
-%         lab=evalin('base','Tot_lab')
-%         l=length(lab)
-        [~,sheet]=xlsfinfo('Signal information.xlsx')
-%         
-%         if strcmp(lab(l-1),sheet)
-%                         
-%             disp('ja');
+            function ex_call(varargin)
+                labtot=evalin('base','Tot_lab');
+                l=length(labtot);
+                label=cell(1,(l-1));
+                
+                for i=1:(l-1)
+                    if ~isequal(i,(l-1))
+                        label{i}=sprintf('%s%c',labtot{i},'+');
+                    else
+                        label{i}=sprintf('%s%c',labtot{i});
+                    end
+                end
 
-%             xlwrite('Signal information',out,'Laptop','B2');
-%             xlwrite('Signal information',cnames,'Laptop','B1');
+                filename=sprintf('%s%c%c',label{:},'.csv');
+                
+                fid=fopen(filename,'w');
+                fprintf(fid,'%s, %s, %s, %s, %s, %s\n',' ',cnames{1,:});
+                
+                for ii=1:16
+                    fprintf(fid,'%s, %s, %s, %s, %s, %s\n',rnames{1,(ii)},out{(ii),:});
+                end
+                
+                msgbox(sprintf('%s%s','Data is placed in:',filename));            
+                fclose(fid);          
+               
+            end
 
-for c=2:length(rnames)
-    xls=sprintf('%c%d','A',c);
-    xlwrite('Signal information',rnames(c),sheet,xls);
-end
-
-%         else
-%             disp('nee');
-%         end
-            
-          end
-      
-    end
-
+        end
 
 G.h=uicontrol('style','pushbutton','units','centimeters',...
     'position',[0.5,0.25,5,1],'string','Generate new signal',...
