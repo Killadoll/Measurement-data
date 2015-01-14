@@ -505,7 +505,7 @@ y=zeros(22050,1);
                 
                 y3=circshift(y_3,lag);
             else
-                y3=y_1;
+                y3=y_3;
             end
             
             T3=100*(10^((thd(y3))/20));
