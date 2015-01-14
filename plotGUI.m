@@ -445,29 +445,69 @@ if any(strcmp(vars,'fry'))
 else
     set(p(35),'Enable','off');
 end
+
+y=zeros(22050,1);
             
     function updatePlot(~,~)
 
-        t=evalin('base','time');  
+        t=evalin('base','time');         
                               
         if get(p(1),'Value')
-            y1=evalin('base','laptop');
+            y_1=evalin('base','laptop');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y1=(y_1-mean(y_1))/std(y_1);
+                yc=xcorr(y_y,y_y1);
+                lag=mod(find(yc==max(yc)),length(y_1));
+                
+                y1=circshift(y_1,lag);
+            else
+                y1=y_1;
+            end
+            
             T1=100*(10^((thd(y1))/20));
             lab1='Laptop';
+           
         else
             y1=0; T1=0; lab1='0';            
-        end
-        
+        end      
+       
         if get(p(2),'Value')
-            y2=evalin('base','floor_lamp_common');
+            y_2=evalin('base','floor_lamp_common'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y2=(y_2-mean(y_2))/std(y_2);
+                yc=xcorr(y_y,y_y2);
+                lag=mod(find(yc==max(yc)),length(y_2));
+                
+                y2=circshift(y_2,lag);
+            else
+                y2=y_2;
+            end
+
             T2=100*(10^((thd(y2))/20));
             lab2='FloorLamp_c';
+            
         else
-            y2=0; T2=0; lab2='0';            
+            y2=zeros(22050,1); T2=0; lab2='0';            
         end
         
         if get(p(3),'Value')
-            y3=evalin('base','floor_lamp_max');
+            y_3=evalin('base','floor_lamp_max');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y3=(y_3-mean(y_3))/std(y_3);
+                yc=xcorr(y_y,y_y3);
+                lag=mod(find(yc==max(yc)),length(y_3));
+                
+                y3=circshift(y_3,lag);
+            else
+                y3=y_1;
+            end
+            
             T3=100*(10^((thd(y3))/20));
             lab3='FloorLamp_mx';
         else
@@ -475,7 +515,19 @@ end
         end
         
         if get(p(4),'Value')
-            y4=evalin('base','floor_lamp_min');
+            y_4=evalin('base','floor_lamp_min');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y4=(y_4-mean(y_4))/std(y_4);
+                yc=xcorr(y_y,y_y4);
+                lag=mod(find(yc==max(yc)),length(y_4));
+                
+                y4=circshift(y_4,lag);
+            else
+                y4=y_4;
+            end
+            
             T4=100*(10^((thd(y4))/20));
             lab4='FloorLamp_mn';
         else
@@ -483,7 +535,19 @@ end
         end
         
         if get(p(5),'Value')
-            y5=evalin('base','senseo_warmingup'); 
+            y_5=evalin('base','senseo_warmingup'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y5=(y_5-mean(y_5))/std(y_5);
+                yc=xcorr(y_y,y_y5);
+                lag=mod(find(yc==max(yc)),length(y_5));
+                
+                y5=circshift(y_5,lag);
+            else
+                y5=y_5;
+            end
+            
             T5=100*(10^((thd(y5))/20));
             lab5='SenseoWU';
         else
@@ -491,7 +555,19 @@ end
         end
         
         if get(p(6),'Value')
-            y6=evalin('base','senseo_running'); 
+            y_6=evalin('base','senseo_running'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y6=(y_6-mean(y_6))/std(y_6);
+                yc=xcorr(y_y,y_y6);
+                lag=mod(find(yc==max(yc)),length(y_6));
+                
+                y6=circshift(y_6,lag);
+            else
+                y6=y_6;
+            end
+            
             T6=100*(10^((thd(y6))/20));
             lab6='SenseoR';
         else
@@ -499,7 +575,19 @@ end
         end
         
         if get(p(7),'Value')
-            y7=evalin('base','dishwasher_prep_end');
+            y_7=evalin('base','dishwasher_prep_end');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y7=(y_7-mean(y_7))/std(y_7);
+                yc=xcorr(y_y,y_y7);
+                lag=mod(find(yc==max(yc)),length(y_7));
+                
+                y7=circshift(y_7,lag);
+            else
+                y7=y_7;
+            end
+            
             T7=100*(10^((thd(y7))/20));
             lab7='DishwasherPE';
         else
@@ -507,7 +595,19 @@ end
         end
         
         if get(p(8),'Value')
-            y8=evalin('base','dishwasher_rincing');
+            y_8=evalin('base','dishwasher_rincing');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y8=(y_8-mean(y_8))/std(y_8);
+                yc=xcorr(y_y,y_y8);
+                lag=mod(find(yc==max(yc)),length(y_8));
+                
+                y8=circshift(y_8,lag);
+            else
+                y8=y_8;
+            end
+            
             T8=100*(10^((thd(y8))/20));
             lab8='DishwasherR';
         else
@@ -515,7 +615,19 @@ end
         end
         
         if get(p(9),'Value')
-            y9=evalin('base','dishwasher_blowdrying');
+            y_9=evalin('base','dishwasher_blowdrying');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y9=(y_9-mean(y_9))/std(y_9);
+                yc=xcorr(y_y,y_y9);
+                lag=mod(find(yc==max(yc)),length(y_9));
+                
+                y9=circshift(y_9,lag);
+            else
+                y9=y_9;
+            end
+            
             T9=100*(10^((thd(y9))/20));
             lab9='DishwasherB';
         else
@@ -523,7 +635,19 @@ end
         end
         
         if get(p(10),'Value')
-            y10=evalin('base','dishwasher_cleaning');  
+            y_10=evalin('base','dishwasher_cleaning');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y10=(y_10-mean(y_10))/std(y_10);
+                yc=xcorr(y_y,y_y10);
+                lag=mod(find(yc==max(yc)),length(y_10));
+                
+                y10=circshift(y_10,lag);
+            else
+                y10=y_10;
+            end
+            
             T10=100*(10^((thd(y10))/20));
             lab10='DishwasherC';
         else
@@ -531,7 +655,19 @@ end
         end
         
         if get(p(11),'Value')
-            y11=evalin('base','washingmachine_disposing_water');
+            y_11=evalin('base','washingmachine_disposing_water');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y11=(y_11-mean(y_11))/std(y_11);
+                yc=xcorr(y_y,y_y11);
+                lag=mod(find(yc==max(yc)),length(y_11));
+                
+                y11=circshift(y_11,lag);
+            else
+                y11=y_11;
+            end
+            
             T11=100*(10^((thd(y11))/20));
             lab11='WashingmachineDW';
         else
@@ -539,7 +675,19 @@ end
         end        
        
         if get(p(12),'Value')
-            y12=evalin('base','washingmachine_rincing');
+            y_12=evalin('base','washingmachine_rincing');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y12=(y_12-mean(y_12))/std(y_12);
+                yc=xcorr(y_y,y_y12);
+                lag=mod(find(yc==max(yc)),length(y_12));
+                
+                y12=circshift(y_12,lag);
+            else
+                y12=y_12;
+            end
+            
             T12=100*(10^((thd(y12))/20));
             lab12='WashingmachineR';
         else
@@ -547,7 +695,19 @@ end
         end
         
         if get(p(13),'Value')
-            y13=evalin('base','washingmachine_slow_centrifuge'); 
+            y_13=evalin('base','washingmachine_slow_centrifuge');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y13=(y_13-mean(y_13))/std(y_13);
+                yc=xcorr(y_y,y_y13);
+                lag=mod(find(yc==max(yc)),length(y_13));
+                
+                y13=circshift(y_13,lag);
+            else
+                y13=y_13;
+            end
+            
             T13=100*(10^((thd(y13))/20));
             lab13='WashingmachineSC';
         else
@@ -555,7 +715,19 @@ end
         end
         
         if get(p(14),'Value')
-            y14=evalin('base','washingmachine_fast_centrifuge'); 
+            y_14=evalin('base','washingmachine_fast_centrifuge');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y14=(y_14-mean(y_14))/std(y_14);
+                yc=xcorr(y_y,y_y14);
+                lag=mod(find(yc==max(yc)),length(y_14));
+                
+                y14=circshift(y_14,lag);
+            else
+                y14=y_14;
+            end
+            
             T14=100*(10^((thd(y14))/20));
             lab14='WashingmachineFC';
         else
@@ -563,7 +735,19 @@ end
         end
         
         if get(p(15),'Value')
-            y15=evalin('base','washingmachine_washing');
+            y_15=evalin('base','washingmachine_washing');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y15=(y_15-mean(y_15))/std(y_15);
+                yc=xcorr(y_y,y_y15);
+                lag=mod(find(yc==max(yc)),length(y_15));
+                
+                y15=circshift(y_15,lag);
+            else
+                y15=y_15;
+            end
+            
             T15=100*(10^((thd(y15))/20));
             lab15='WashingmachineW';
         else
@@ -571,7 +755,19 @@ end
         end
         
         if get(p(16),'Value')
-            y16=evalin('base','washingmachine_rest');  
+            y_16=evalin('base','washingmachine_rest'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y16=(y_16-mean(y_16))/std(y_16);
+                yc=xcorr(y_y,y_y16);
+                lag=mod(find(yc==max(yc)),length(y_16));
+                
+                y16=circshift(y_16,lag);
+            else
+                y16=y_16;
+            end
+            
             T16=100*(10^((thd(y16))/20));
             lab16='WashingmachineR';
         else
@@ -579,7 +775,19 @@ end
         end
         
         if get(p(17),'Value')
-            y17=evalin('base','washingmachine_taking_water'); 
+            y_17=evalin('base','washingmachine_taking_water'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y17=(y_17-mean(y_17))/std(y_17);
+                yc=xcorr(y_y,y_y17);
+                lag=mod(find(yc==max(yc)),length(y_17));
+                
+                y17=circshift(y_17,lag);
+            else
+                y17=y_17;
+            end
+            
             T17=100*(10^((thd(y17))/20));
             lab17='WashingmachineTW';
         else
@@ -587,7 +795,19 @@ end
         end
         
         if get(p(18),'Value')
-            y18=evalin('base','dryer_drying'); 
+            y_18=evalin('base','dryer_drying'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y18=(y_18-mean(y_18))/std(y_18);
+                yc=xcorr(y_y,y_y18);
+                lag=mod(find(yc==max(yc)),length(y_18));
+                
+                y18=circshift(y_18,lag);
+            else
+                y18=y_18;
+            end
+            
             T18=100*(10^((thd(y18))/20));
             lab18='DryerD';
         else
@@ -595,7 +815,19 @@ end
         end
         
         if get(p(19),'Value')
-            y19=evalin('base','dryer_vent'); 
+            y_19=evalin('base','dryer_vent'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y19=(y_19-mean(y_19))/std(y_19);
+                yc=xcorr(y_y,y_y19);
+                lag=mod(find(yc==max(yc)),length(y_19));
+                
+                y19=circshift(y_19,lag);
+            else
+                y19=y_19;
+            end
+            
             T19=100*(10^((thd(y19))/20));
             lab19='DryerV';
         else
@@ -603,7 +835,19 @@ end
         end 
         
         if get(p(20),'Value')
-            y20=evalin('base','freezer'); 
+            y_20=evalin('base','freezer');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y20=(y_20-mean(y_20))/std(y_20);
+                yc=xcorr(y_y,y_y20);
+                lag=mod(find(yc==max(yc)),length(y_20));
+                
+                y20=circshift(y_20,lag);
+            else
+                y20=y_20;
+            end
+            
             T20=100*(10^((thd(y20))/20));
             lab20='Freezer';
         else
@@ -611,7 +855,19 @@ end
         end
         
         if get(p(21),'Value')
-            y21=evalin('base','fridge'); 
+            y_21=evalin('base','fridge'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y21=(y_21-mean(y_21))/std(y_21);
+                yc=xcorr(y_y,y_y21);
+                lag=mod(find(yc==max(yc)),length(y_21));
+                
+                y21=circshift(y_21,lag);
+            else
+                y21=y_21;
+            end
+            
             T21=100*(10^((thd(y21))/20));
             lab21='Fridge';
         else
@@ -619,7 +875,19 @@ end
         end
         
         if get(p(22),'Value')
-            y22=evalin('base','extractor'); 
+            y_22=evalin('base','extractor'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y22=(y_22-mean(y_22))/std(y_22);
+                yc=xcorr(y_y,y_y22);
+                lag=mod(find(yc==max(yc)),length(y_22));
+                
+                y22=circshift(y_22,lag);
+            else
+                y22=y_22;
+            end
+            
             T22=100*(10^((thd(y22))/20));
             lab22='Extractor';
         else
@@ -627,7 +895,19 @@ end
         end
         
         if get(p(23),'Value')
-            y23=evalin('base','phone_charger'); 
+            y_23=evalin('base','phone_charger'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y23=(y_23-mean(y_23))/std(y_23);
+                yc=xcorr(y_y,y_y23);
+                lag=mod(find(yc==max(yc)),length(y_23));
+                
+                y23=circshift(y_23,lag);
+            else
+                y23=y_23;
+            end
+            
             T23=100*(10^((thd(y23))/20));
             lab23='Phone';
         else
@@ -635,7 +915,19 @@ end
         end
         
         if get(p(24),'Value')
-            y24=evalin('base','tv'); 
+            y_24=evalin('base','tv');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y24=(y_24-mean(y_24))/std(y_24);
+                yc=xcorr(y_y,y_y24);
+                lag=mod(find(yc==max(yc)),length(y_24));
+                
+                y24=circshift(y_24,lag);
+            else
+                y24=y_24;
+            end
+            
             T24=100*(10^((thd(y24))/20));
             lab24='TV';
         else
@@ -643,7 +935,19 @@ end
         end
         
         if get(p(25),'Value')
-            y25=evalin('base','tv_receiver'); 
+            y_25=evalin('base','tv_receiver'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y25=(y_25-mean(y_25))/std(y_25);
+                yc=xcorr(y_y,y_y25);
+                lag=mod(find(yc==max(yc)),length(y_25));
+                
+                y25=circshift(y_25,lag);
+            else
+                y25=y_25;
+            end
+            
             T25=100*(10^((thd(y25))/20));
             lab25='TV Reciever';
         else
@@ -651,7 +955,19 @@ end
         end
         
         if get(p(26),'Value')
-            y26=evalin('base','sound_amp'); 
+            y_26=evalin('base','sound_amp'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y26=(y_26-mean(y_26))/std(y_26);
+                yc=xcorr(y_y,y_y26);
+                lag=mod(find(yc==max(yc)),length(y_26));
+                
+                y26=circshift(y_26,lag);
+            else
+                y26=y_26;
+            end
+            
             T26=100*(10^((thd(y26))/20));
             lab26='SoundAmp';
         else
@@ -659,7 +975,19 @@ end
         end
         
         if get(p(27),'Value')
-            y27=evalin('base','sub'); 
+            y_27=evalin('base','sub');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y27=(y_27-mean(y_27))/std(y_27);
+                yc=xcorr(y_y,y_y27);
+                lag=mod(find(yc==max(yc)),length(y_27));
+                
+                y27=circshift(y_27,lag);
+            else
+                y27=y_27;
+            end
+            
             T27=100*(10^((thd(y27))/20));
             lab27='Sub';
         else
@@ -667,7 +995,19 @@ end
         end
         
         if get(p(28),'Value')
-            y28=evalin('base','ps3'); 
+            y_28=evalin('base','ps3');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y28=(y_28-mean(y_28))/std(y_28);
+                yc=xcorr(y_y,y_y28);
+                lag=mod(find(yc==max(yc)),length(y_28));
+                
+                y28=circshift(y_28,lag);
+            else
+                y28=y_28;
+            end
+            
             T28=100*(10^((thd(y28))/20));
             lab28='PS3';
         else
@@ -675,7 +1015,19 @@ end
         end
         
         if get(p(29),'Value')
-            y29=evalin('base','wii'); 
+            y_29=evalin('base','wii'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y29=(y_29-mean(y_29))/std(y_29);
+                yc=xcorr(y_y,y_y29);
+                lag=mod(find(yc==max(yc)),length(y_29));
+                
+                y29=circshift(y_29,lag);
+            else
+                y29=y_29;
+            end
+            
             T29=100*(10^((thd(y29))/20));
             lab29='Wii';
         else
@@ -683,7 +1035,19 @@ end
         end
         
         if get(p(30),'Value')
-            y30=evalin('base','dvd'); 
+            y_30=evalin('base','dvd');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y30=(y_30-mean(y_30))/std(y_30);
+                yc=xcorr(y_y,y_y30);
+                lag=mod(find(yc==max(yc)),length(y_30));
+                
+                y30=circshift(y_30,lag);
+            else
+                y30=y_30;
+            end
+            
             T30=100*(10^((thd(y30))/20));
             lab30='DVD';
         else
@@ -691,7 +1055,19 @@ end
         end
         
         if get(p(31),'Value')
-            y31=evalin('base','modem'); 
+            y_31=evalin('base','modem');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y31=(y_31-mean(y_31))/std(y_31);
+                yc=xcorr(y_y,y_y31);
+                lag=mod(find(yc==max(yc)),length(y_31));
+                
+                y31=circshift(y_31,lag);
+            else
+                y31=y_31;
+            end
+            
             T31=100*(10^((thd(y31))/20));
             lab31='Modem';
         else
@@ -699,7 +1075,19 @@ end
         end
         
         if get(p(32),'Value')
-            y32=evalin('base','alarm'); 
+            y_32=evalin('base','alarm'); 
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y32=(y_32-mean(y_32))/std(y_32);
+                yc=xcorr(y_y,y_y32);
+                lag=mod(find(yc==max(yc)),length(y_32));
+                
+                y32=circshift(y_32,lag);
+            else
+                y32=y_32;
+            end
+            
             T32=100*(10^((thd(y32))/20));
             lab32='Alarm';
         else
@@ -707,7 +1095,19 @@ end
         end
         
         if get(p(33),'Value')
-            y33=evalin('base','ex_hdd'); 
+            y_33=evalin('base','ex_hdd');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y33=(y_33-mean(y_33))/std(y_33);
+                yc=xcorr(y_y,y_y33);
+                lag=mod(find(yc==max(yc)),length(y_33));
+                
+                y33=circshift(y_33,lag);
+            else
+                y33=y_33;
+            end
+            
             T33=100*(10^((thd(y33))/20));
             lab33='ExtHDD';
         else
@@ -715,7 +1115,19 @@ end
         end
         
         if get(p(34),'Value')
-            y34=evalin('base','oven'); 
+            y_34=evalin('base','oven');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y34=(y_34-mean(y_34))/std(y_34);
+                yc=xcorr(y_y,y_y34);
+                lag=mod(find(yc==max(yc)),length(y_34));
+                
+                y34=circshift(y_34,lag);
+            else
+                y34=y_34;
+            end
+            
             T34=100*(10^((thd(y34))/20));
             lab34='Oven';
         else
@@ -723,13 +1135,25 @@ end
         end
         
         if get(p(35),'Value')
-            y35=evalin('base','fry'); 
+            y_35=evalin('base','fry');
+            
+            if ~isequal(y,zeros(22050,1))
+                y_y=(y-mean(y))/std(y);
+                y_y35=(y_35-mean(y_35))/std(y_35);
+                yc=xcorr(y_y,y_y35);
+                lag=mod(find(yc==max(yc)),length(y_35));
+                
+                y35=circshift(y_35,lag);
+            else
+                y35=y_35;
+            end
+            
             T35=100*(10^((thd(y35))/20));
             lab35='FryerPan';
         else
             y35=0; T35=0; lab35='0';            
         end
-               
+
         y=y1+y2+y3+y4+y5+y6+y7+y8+y9+y10+y11+y12+y13...
             +y14+y15+y16+y17+y18+y19+y20+y21+y22+y23...
             +y24+y25+y26+y27+y28+y29+y30+y31+y32+y33...
@@ -768,9 +1192,14 @@ end
         xlab=xlabt(~strcmp(xlabt,'0')); 
         
         assignin('base','Tot_lab',xlab);
-              
-        bar(ax3,TT);
-        grid(ax3, 'on');        
+        
+        if TT>0
+            bar(ax3,TT);
+            grid(ax3, 'on'); 
+        else
+            bar(ax3,0);
+            grid(ax3, 'on'); 
+        end
         
         xlabel(ax1, 'Time (seconds)');
         ylabel(ax1, 'Amplitude (pixels per sample unit)');

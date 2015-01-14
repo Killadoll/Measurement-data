@@ -105,11 +105,10 @@ f=figure('units','centimeters','position',[1,1,15,20],...
     end
          
             
-% Create OK pushbutton   
+  
 h.p = uicontrol('style','pushbutton','units','centimeters',...
                 'position',[7,0.25,1,1],'string','OK',...
                 'callback',@c_call);
-    % Pushbutton callback
     function c_call(varargin)
         vals = get(c,'Value');
         checked = find([vals{:}]);

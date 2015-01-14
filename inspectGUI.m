@@ -675,8 +675,26 @@ signal();
                        
             set(tbl2,'Data',out); 
             
+            G.h=uicontrol('style','pushbutton','units','centimeters',...
+            'position',[0.5,0.25,5,1],'string','Generate new signal',...
+            'callback',@g_call);
+
+            function g_call(varargin)
+                plotGUI();
+                hh=findobj('Name','Signal inspection');
+                close(hh);
+            end
+            
+            f.h=uicontrol('style','pushbutton','units','centimeters',...
+            'position',[6,0.25,5,1],'string','Filter options',...
+            'callback',@f_call);
+        
+            s.h=uicontrol('style','pushbutton','units','centimeters',...
+                'position',[11.5,0.25,5,1],'string','Signal regcognition',...
+                'callback',@s_call);
+            
             ex.h = uicontrol('style','pushbutton','units','centimeters',...
-                'position',[7,0.25,5,1],'string','Write to CVS',...
+                'position',[27.5,0.25,5,1],'string','Write to CVS',...
                 'callback',@ex_call);
 
             function ex_call(varargin)
@@ -708,36 +726,22 @@ signal();
 
         end
 
-G.h=uicontrol('style','pushbutton','units','centimeters',...
-    'position',[0.5,0.25,5,1],'string','Generate new signal',...
-    'callback',@g_call);
+        E.h = uicontrol('style','pushbutton','units','centimeters',...
+            'position',[33,0.25,5,1],'string','End Program',...
+            'callback',@eh_call);
 
-    function g_call(varargin)
-        plotGUI();
-        hh=findobj('Name','Signal inspection');
-        close(hh);
-    end
+            function eh_call(varargin)
+                eh=findobj('Name','Signal inspection');
+                close(eh);
+            end
 
-E.h = uicontrol('style','pushbutton','units','centimeters',...
-    'position',[14,0.25,5,1],'string','End Program',...
-    'callback',@eh_call);
-
-    function eh_call(varargin)
-        eh=findobj('Name','Signal inspection');
-        close(eh);
-    end
-
-
-        
     end
 
 h(100) = uicontrol('style','checkbox','units','centimeters',...
     'position',[34.5,18.5,3.5,1],'string','Place/use cursor',...
     'Callback',@placeCursor); 
 
-    function placeCursor(~,~) 
-        
-                
+    function placeCursor(~,~)    
         
        if get(h(100),'Value')
             datacursormode on;
@@ -745,9 +749,6 @@ h(100) = uicontrol('style','checkbox','units','centimeters',...
             datacursormode off;
             zoom on;
        end 
-        
 
-    
-    
     end
 end
