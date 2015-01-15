@@ -140,14 +140,18 @@ signal();
         h(16)=uicontrol('style','checkbox','units','centimeters',...
             'position',[34.8,11.5,1.5,0.5],'string','30th',...
             'Callback',@plotH16);
+        h(17)=uicontrol('style','checkbox','units','centimeters',...
+            'position',[34.8,11,3,0.5],'string','Get all',...
+            'Callback',@plotHarm);
         
-        out=cell(20,5);
-        Yf=zeros(length(Y),1);        
+        out=cell(16,5);
+        Yf=zeros(length(Y),1); 
+        
+        set(h(1),'value',1);
         
         plotH1();
         
-        function plotH1(~,~)
-            set(h(1),'value',1);
+        function plotH1(~,~)    
             set(h(2),'value',0);
             set(h(3),'value',0);
             set(h(4),'value',0);
@@ -168,6 +172,7 @@ signal();
         
         function plotH2(~,~)
             set(h(1),'value',0);
+            set(h(2),'value',1);
             set(h(3),'value',0);
             set(h(4),'value',0);
             set(h(5),'value',0);
@@ -188,6 +193,7 @@ signal();
         function plotH3(~,~)
             set(h(1),'value',0);
             set(h(2),'value',0);
+            set(h(3),'value',1);
             set(h(4),'value',0);
             set(h(5),'value',0);
             set(h(6),'value',0);
@@ -208,6 +214,7 @@ signal();
             set(h(1),'value',0);
             set(h(2),'value',0);
             set(h(3),'value',0);
+            set(h(4),'value',1);
             set(h(5),'value',0);
             set(h(6),'value',0);
             set(h(7),'value',0);
@@ -228,6 +235,7 @@ signal();
             set(h(2),'value',0);
             set(h(3),'value',0);
             set(h(4),'value',0);
+            set(h(5),'value',1);
             set(h(6),'value',0);
             set(h(7),'value',0);
             set(h(8),'value',0);
@@ -248,6 +256,7 @@ signal();
             set(h(3),'value',0);
             set(h(4),'value',0);
             set(h(5),'value',0);
+            set(h(6),'value',1);
             set(h(7),'value',0);
             set(h(8),'value',0);
             set(h(9),'value',0);
@@ -268,6 +277,7 @@ signal();
             set(h(4),'value',0);
             set(h(5),'value',0);
             set(h(6),'value',0);
+            set(h(7),'value',1);
             set(h(8),'value',0);
             set(h(9),'value',0);
             set(h(10),'value',0);
@@ -288,6 +298,7 @@ signal();
             set(h(5),'value',0);
             set(h(6),'value',0);
             set(h(7),'value',0);
+            set(h(8),'value',1);
             set(h(9),'value',0);
             set(h(10),'value',0);
             set(h(11),'value',0);
@@ -308,6 +319,7 @@ signal();
             set(h(6),'value',0);
             set(h(7),'value',0);
             set(h(8),'value',0);
+            set(h(9),'value',1);
             set(h(10),'value',0);
             set(h(11),'value',0);
             set(h(12),'value',0);
@@ -328,6 +340,7 @@ signal();
             set(h(7),'value',0);
             set(h(8),'value',0);
             set(h(9),'value',0);
+            set(h(10),'value',1);
             set(h(11),'value',0);
             set(h(12),'value',0);
             set(h(13),'value',0);
@@ -348,6 +361,7 @@ signal();
             set(h(8),'value',0);
             set(h(9),'value',0);
             set(h(10),'value',0);
+            set(h(11),'value',1);
             set(h(12),'value',0);
             set(h(13),'value',0);
             set(h(14),'value',0);
@@ -368,6 +382,7 @@ signal();
             set(h(9),'value',0);
             set(h(10),'value',0);
             set(h(11),'value',0);
+            set(h(12),'value',1);
             set(h(13),'value',0);
             set(h(14),'value',0);
             set(h(15),'value',0);
@@ -388,6 +403,7 @@ signal();
             set(h(10),'value',0);
             set(h(11),'value',0);
             set(h(12),'value',0);
+            set(h(13),'value',1);
             set(h(14),'value',0);
             set(h(15),'value',0);
             set(h(16),'value',0)
@@ -408,6 +424,7 @@ signal();
             set(h(11),'value',0);
             set(h(12),'value',0);
             set(h(13),'value',0);
+            set(h(14),'value',1);
             set(h(15),'value',0);
             set(h(16),'value',0)
             plotHarm();
@@ -428,6 +445,7 @@ signal();
             set(h(12),'value',0);
             set(h(13),'value',0);
             set(h(14),'value',0);
+            set(h(15),'value',1);
             set(h(16),'value',0)
             plotHarm();
         end
@@ -448,8 +466,9 @@ signal();
             set(h(13),'value',0);
             set(h(14),'value',0);
             set(h(15),'value',0);
+            set(h(16),'value',1);
             plotHarm();
-        end        
+        end         
                       
         function plotHarm(~,~)            
             if get(h(1),'value')
@@ -483,7 +502,7 @@ signal();
             elseif get(h(15),'value')
                 fc=z(1,15);
             elseif get(h(16),'value')
-                fc=z(1,16);
+                fc=z(1,16); 
             else
                 fc=0;        
             end            
@@ -671,7 +690,41 @@ signal();
                 out{20,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
                 out{20,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
                 out{20,5}=sprintf('%c%c%c',num2str(z(2,20)/(z(2,1)/100)),' ','%');
-            end           
+            end  
+            
+            if get(h(1),'value') && get(h(17),'value')
+                plotH2();
+            elseif get(h(2),'value') && get(h(17),'value')
+                plotH3();
+            elseif get(h(3),'value') && get(h(17),'value')
+                plotH4();
+            elseif get(h(4),'value') && get(h(17),'value')
+                plotH5();
+            elseif get(h(5),'value') && get(h(17),'value')
+                plotH6();
+            elseif get(h(6),'value') && get(h(17),'value')
+                plotH7();
+            elseif get(h(7),'value') && get(h(17),'value')
+                plotH8();
+            elseif get(h(8),'value') && get(h(17),'value')
+                plotH9();
+            elseif get(h(9),'value') && get(h(17),'value')
+                plotH10();
+            elseif get(h(10),'value') && get(h(17),'value')
+                plotH11();
+            elseif get(h(11),'value') && get(h(17),'value')
+                plotH12();
+            elseif get(h(12),'value') && get(h(17),'value')
+                plotH13();
+            elseif get(h(13),'value') && get(h(17),'value')
+                plotH14();
+            elseif get(h(14),'value') && get(h(17),'value')
+                plotH15();
+            elseif get(h(15),'value') && get(h(17),'value')
+                plotH16();
+            elseif get(h(16),'value') && get(h(17),'value')
+                set(h(17),'value',0);
+            end
                        
             set(tbl2,'Data',out); 
             
@@ -685,13 +738,15 @@ signal();
                 close(hh);
             end
             
-            f.h=uicontrol('style','pushbutton','units','centimeters',...
+            filt.h=uicontrol('style','pushbutton','units','centimeters',...
             'position',[6,0.25,5,1],'string','Filter options',...
             'callback',@f_call);
+            set(filt.h,'enable','off');
         
             s.h=uicontrol('style','pushbutton','units','centimeters',...
-                'position',[11.5,0.25,5,1],'string','Signal regcognition',...
+                'position',[11.5,0.25,5,1],'string','Signal recognition',...
                 'callback',@s_call);
+            set(s.h,'enable','off');
             
             ex.h = uicontrol('style','pushbutton','units','centimeters',...
                 'position',[27.5,0.25,5,1],'string','Write to CVS',...
@@ -715,6 +770,26 @@ signal();
                 fid=fopen(filename,'w');
                 fprintf(fid,'%s, %s, %s, %s, %s, %s\n',' ',cnames{1,:});
                 
+                qstring=['WARNING: The table does not contain '...
+                        'information for all harmonics. Do you want to ' ...
+                        'generate these values before writing to CVS? '...
+                        '(Only the current table will be presented in the'...
+                        'CVS file)'];
+                    
+                if any(cellfun(@isempty,out),1)
+
+                    choice=questdlg(qstring, 'CVS warning','Yes',...
+                        'No, generate now','No, generate now');
+                    
+                    switch choice
+                        case 'Yes'
+                            set(h(17),'value',1);
+                            plotHarm();
+                        case 'No, generate now'                        
+                    end
+                    
+                end
+                
                 for ii=1:16
                     fprintf(fid,'%s, %s, %s, %s, %s, %s\n',rnames{1,(ii)},out{(ii),:});
                 end
@@ -733,6 +808,7 @@ signal();
             function eh_call(varargin)
                 eh=findobj('Name','Signal inspection');
                 close(eh);
+                disp('Program ended by user');
             end
 
     end

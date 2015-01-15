@@ -505,7 +505,7 @@ y=zeros(22050,1);
                 
                 y3=circshift(y_3,lag);
             else
-                y3=y_1;
+                y3=y_3;
             end
             
             T3=100*(10^((thd(y3))/20));
@@ -1221,7 +1221,7 @@ H.p = uicontrol('style','pushbutton','units','centimeters',...
 
     function p_call(varargin)
         results();
-        delete(p);
+        close(p);
     end
 
 E.p = uicontrol('style','pushbutton','units','centimeters',...
@@ -1231,6 +1231,7 @@ E.p = uicontrol('style','pushbutton','units','centimeters',...
     function e_call(varargin)
         hf=findobj('Name','Current measurements');
         close(hf);
+        disp('Program ended by user');
     end
 
 t.p = uicontrol('style','pushbutton','units','centimeters',...
