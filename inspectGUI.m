@@ -82,7 +82,7 @@ signal();
         [~,I]=sort(z(1,:));
 
         d=z(:,I);
-        set(tbl1,'Data',d);  
+        set(tbl1,'Data',d);
        
         xlabel(ax4, 'Time (seconds)');
         ylabel(ax4, 'Amplitude (pixels per sample unit)');
@@ -565,12 +565,12 @@ signal();
                         if isequal(fc,z(1,1))
                             out{zi,3}=sprintf('%f%c%c',(phase_yif/pi)*180,' ',char(176));
                             out{zi,4}=sprintf('%f%c%c',0,' ',char(176)); 
+                            out{zi,5}=sprintf('%c%c%c','100',' ','%');
                         else
                             out{zi,3}=sprintf('%f%c%c',(phase_yih/pi)*180,' ',char(176));
                             out{zi,4}=sprintf('%f%c%c',(phase_shift/pi)*180,' ',char(176));
+                            out{zi,5}=sprintf('%c%c%c',num2str(z(2,zi)/(z(2,1)/100)),' ','%');
                         end
-                    
-                        out{zi,5}=sprintf('%c%c%c','100',' ','%');
                     end                                         
 
                     if get(h(17),'value')
@@ -640,24 +640,46 @@ signal();
                 'callback',@s_call);
             set(s.h,'enable','off');
             
-            ex.h = uicontrol('style','pushbutton','units','centimeters',...
-                'position',[27.5,0.25,5,1],'string','Write to CVS',...
-                'callback',@ex_call);
+            exs.h = uicontrol('style','pushbutton','units','centimeters',...
+                'position',[22,0.25,5,1],'string','Write signal to CVS',...
+                'callback',@exs_call);
+            
+            ext.h = uicontrol('style','pushbutton','units','centimeters',...
+                'position',[27.5,0.25,5,1],'string','Write table to CVS',...
+                'callback',@ext_call);
+            
+            labtot=evalin('base','Tot_lab');
+            l=length(labtot);
+            label=cell(1,(l-1));
 
-            function ex_call(varargin)
-                labtot=evalin('base','Tot_lab');
-                l=length(labtot);
-                label=cell(1,(l-1));
-                
-                for i=1:(l-1)
-                    if ~isequal(i,(l-1))
-                        label{i}=sprintf('%s%c',labtot{i},'+');
-                    else
-                        label{i}=sprintf('%s%c',labtot{i});
-                    end
+            for i=1:(l-1)
+                if ~isequal(i,(l-1))
+                    label{i}=sprintf('%s%c',labtot{i},'+');
+                else
+                    label{i}=sprintf('%s%c',labtot{i});
                 end
+            end
+                
+            function exs_call(varargin)
+                filename=sprintf('%s%s%c%c%s','Generated csv files/Signals/',label{:},'_signal','.csv');
+                [fid,msg]=fopen(filename,'w');
+                if fid==-1
+                    error(msg)
+                end
+                
+                signal=num2cell(y);
+                
+                for ii=1:22050
+                    fprintf(fid,'%d\n',signal{(ii),:});
+                end
+                
+                msgbox(sprintf('%s%s','Signal data is placed in:',filename));            
+                fclose(fid);
+                
+            end
 
-                filename=sprintf('%s%c%c',label{:},'.csv');
+            function ext_call(varargin)
+                filename=sprintf('%s%s%c%c','Generated csv files/Tables/',label{:},'.csv');
                 
                 fid=fopen(filename,'w');
                 fprintf(fid,'%s, %s, %s, %s, %s, %s\n',' ',cnames{1,:});
@@ -688,7 +710,7 @@ signal();
                     fprintf(fid,'%s, %s, %s, %s, %s, %s\n',rnames{1,(ii)},out{(ii),:});
                 end
                 
-                msgbox(sprintf('%s%s','Data is placed in:',filename));            
+                msgbox(sprintf('%s%s','Table data is placed in:',filename));            
                 fclose(fid);          
                
             end

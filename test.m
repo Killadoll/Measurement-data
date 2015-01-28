@@ -1,154 +1,29 @@
-close all;
+V=5; %the peak voltage
+f0 = 1000; % Fundamental frequency in Hertz
+w0 = 2*pi*f0; % Fundamental frequency in radians
+T=1/f0; 
+D=0.5; % pulse duty ratio
+% plotting a square wave
+dT=T/512; % incremental time,
+t1=0:dT:D*T-dT; % Positive half period
+t2=D*T:dT:T-dT; % Negative half period
+t=[t1 t2]; %One complete period
+v=V*[ones(size(t1)) -ones(size(t2))]; % square wave signal over a period 
 
-y=evalin('base','Total');
-t=evalin('base','time');
-
-figure
-subplot(2,1,1);
-plot(t,y);grid on;
-
-fs=44100;
-N = size(t,1);
-Y = fftshift(fft(y));
-dF = fs/N;
-f = -fs/2:dF:fs/2-dF; 
-
-subplot(2,1,2);
-plot(f,abs(Y)/N)
-xlim([0 2000]); 
-grid on;
-
-fc=50;
-indhigh=max(find(f(f<=fc)))
-fchigh=f(indhigh) 
-indlow=N+2-indhigh
-fclow=f(indlow)
-Y2=zeros(length(Y),1);
-Y2(indlow:indhigh)=Y(indlow:indhigh);
-Yi=ifft(ifftshift(Y2));
-
-figure
-subplot(2,1,1);
-plot(t,Yi); grid on;
-
-subplot(2,1,2);
-plot(f,abs(Y2)/N)
-xlim([0 2000]); 
-grid on;
-
-
-% figure
-% subplot(2,1,1);
-% plot(t,xrec); grid on;
-% 
-% subplot(2,1,2);
-% plot(f,abs(ydft)/N)
-% xlim([0 2000]); 
-% grid on;
-
-
-% Y2=zeros(length(Y),1);
-% Y2(1322:1345)=Y(1322:1345);
-% Yi=ifft(ifftshift(Y2));
-% 
-% figure
-% subplot(2,1,1);
-% plot(t,abs(Yi)); grid on;
-% 
-% [pks,locs]=findpeaks((abs(Y)/N),'minpeakdistance',45,...
-%             'minpeakheight',0.3);        
-%         
-% ls=length(locs);
-% for m=1:ls 
-%     if (f(locs(m))>0)
-%         z(:,m)=[f(locs(m));pks(m)];
-%     end
-%     
-%     
-% end
-% 
-% z(1:2,1)
-
-% if pks==z(2,1)
-%     disp(locs)
-% end
-% 
-% z(:,all(~any(z),1))=[];
-% [~,I]=sort(z(1,:));
-
-% z2=zeros(length(Y),1);
-% z2(a)=Y(a);
-% zi=ifft(ifftshift(z2));
-% 
-% figure
-% subplot(2,1,1);
-% plot(t,zi); grid on;
-
-% 
-% x=fix(z(:n)/20)
-% zy=ifft(ifftshift(z));
-
-
-% % 
-% fs=44100;
-% 
-% % wp=[49 51]/(fs/2);
-% % ws=[40 60]/(fs/2);
-% % rp=3;
-% % rs=80;
-% % 
-% % [n,wn]=buttord(wp,ws,rp,rs);
-% 
-% % [b,a]=butter(2,[40 50], [30 60],'s');
-% 
-% 
-% q=500;
-% k=30;
-% fc=50;
-% wc=2*pi*fc;
-% 
-% H=tf( k*[1 0], [q/wc 1 q*wc]);
-% % 
-% % b=k;
-% % a=[q/wc 1 q*wc];
-% 
-% % n=4;
-% % fl=40;
-% % fh=60;
-% % wn=[fl fh]/(fs/2);
-% % 
-% % b=fir1(48,[40 60]/(fs*2));
-% % freqz(b,1,512)
-% 
-% % H=tf(b,a)
-% 
-% bodeplot(H); grid on;
-% handler=gcr;
-% handler.AxesGrid.Xunits = 'Hz'; 
-% handler.AxesGrid.Yunits = {'abs','deg'}; 
-% handler.AxesGrid.Grid = 'on';
-% % % 
-% % % 
-% % 
-% y=evalin('base','Total');
-% t=evalin('base','time');
-% 
-% % sig=[y,t];
-% % % 
-% % x=filter(b,a,sig);
-% % % 
-% % figure
-% % plot(t,x);
-% % 
-% figure
-% lsim(H,y,t);
-% %  
-% % fs=44100;
-% % N = size(t,1);
-% % Y = fftshift(fft(y));
-% % dF = fs/N;
-% % f = -fs/2:dF:fs/2-dF;
-% % 
-% % figure
-% % lsim(f,H,abs(Y)/N);
-% 
+V0=0;
+V1= 4*V/pi;
+V3= 4*V/(3*pi);
+V5= 4*V/(5*pi);
+V7= 4*V/(7*pi);
+V9= 4*V/(9*pi);
+v1 = V0+V1*sin(w0*t); % First (fundamental) harmonic
+v13 = v1+V3*sin(3*w0*t); % First + Third harmonic
+v135 =v13+V5*sin(5*w0*t); % First +Third +Fifth harmonic
+subplot (3,2,1)
+plot (t,v,t,v1)
+axis ([ 0 .001 -15 15])
+subplot(3,2,2)
+plot(t,v,t,v13)
+axis([0 .001 -15 15])
+subplot(3,2,3)
+plot(t,v,t,v135) 
