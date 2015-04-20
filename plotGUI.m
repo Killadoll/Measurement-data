@@ -1211,7 +1211,7 @@ y=zeros(22050,1);
 
         xlabel(ax3, 'Appliances','fontsize',10);
         ylabel(ax3, 'Percentages','fontsize',10);
-        title(ax3, 'Total Harmonic distortion (THD)','fontsize',10); 
+        title(ax3, 'Total Harmonic distortion (THD) %','fontsize',10); 
         set(ax3,'XTickLabel',xlab,'fontsize',7);
     end
 
@@ -1235,7 +1235,7 @@ E.p = uicontrol('style','pushbutton','units','centimeters',...
     end
 
 t.p = uicontrol('style','pushbutton','units','centimeters',...
-            'position',[5.55,0.25,5.3,1],'string','Open signal inspection',...
+            'position',[5.55,0.25,5.3,1],'string','Open harmonic inspection',...
             'callback',@t_call);
         
         function t_call(varargin)

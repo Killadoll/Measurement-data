@@ -1,7 +1,7 @@
 function inspectGUI
 
 h=figure('units','centimeters','position',[1,1,38.5,20],...
-    'toolbar','none','menu','none','name','Signal inspection');
+    'toolbar','none','menu','none','name','Harmonic inspection');
 
 ax4=axes('Units','centimeters','Position',[2 16 17 2],...
     'Parent',h);         
@@ -631,12 +631,12 @@ signal();
             end
             
             filt.h=uicontrol('style','pushbutton','units','centimeters',...
-            'position',[6,0.25,5,1],'string','Filter options',...
+            'position',[11.5,0.25,5,1],'string','Filter options',...
             'callback',@f_call);
             set(filt.h,'enable','off');
         
             s.h=uicontrol('style','pushbutton','units','centimeters',...
-                'position',[11.5,0.25,5,1],'string','Signal recognition',...
+                'position',[6,0.25,5,1],'string','Power and impedance',...
                 'callback',@s_call);
             set(s.h,'enable','off');
             
@@ -722,7 +722,7 @@ signal();
             'callback',@eh_call);
 
             function eh_call(varargin)
-                eh=findobj('Name','Signal inspection');
+                eh=findobj('Name','Harmonic inspection');
                 close(eh);
                 disp('Program ended by user');
             end
